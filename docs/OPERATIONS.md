@@ -149,6 +149,12 @@ Review before doing any move.
 
 ## Caddy Route
 
+Generate the planned private route:
+
+```bash
+oreo-caddy-dashboard-plan
+```
+
 Dashboard route should look like:
 
 ```caddyfile
@@ -163,3 +169,13 @@ http://oreochiserver:8088, http://100.x.y.z:8088 {
 ```
 
 Replace `100.x.y.z` with the actual Tailscale IP.
+
+Install only after review:
+
+```bash
+sudo cp /etc/caddy/Caddyfile "/etc/caddy/Caddyfile.backup.$(date +%Y%m%d-%H%M%S)"
+sudo caddy validate --config /etc/caddy/Caddyfile
+sudo systemctl reload caddy
+```
+
+Reload only after validation passes.
