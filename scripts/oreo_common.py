@@ -87,6 +87,35 @@ def by_id() -> dict[str, dict[str, Any]]:
     return {str(item.get("id")): item for item in workloads()}
 
 
+def load_manifest(workload_id: str) -> dict[str, Any]:
+    workload = by_id().get(workload_id)
+    if workload is None:
+        fail(f"unknown workload: {workload_id}")
+    manifest_path = root() / "workloads" / workload_id / "manifest.json"
+    if not manifest_path.exists():
+        return {}
+    try:
+        return json.loads(manifest_path.read_text())
+    except json.JSONDecodeError as exc:
+        fail(f"invalid JSON in {manifest_path}: {exc}")
+
+
+def operation_allowed(workload_id: str, operation: str) -> bool:
+    manifest = load_manifest(workload_id)
+    operations = manifest.get("operations", {}) if manifest else {}
+    return bool(operations.get(operation, False))
+
+
+def runtime_config(workload_id: str) -> dict[str, Any]:
+    workload = by_id().get(workload_id)
+    if workload is None:
+        fail(f"unknown workload: {workload_id}")
+    manifest = load_manifest(workload_id)
+    runtime = dict(workload.get("runtime", {}))
+    runtime.update(manifest.get("runtime", {}) if manifest else {})
+    return runtime
+
+
 def policy_decision(workload_id: str, desired: str) -> dict[str, Any]:
     workload_map = by_id()
     privacy = load_json("privacy.json")
