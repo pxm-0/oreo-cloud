@@ -22,14 +22,14 @@
     <main>
       <section class="summary" aria-label="System summary">
         <div><strong>6</strong><span>Workloads</span></div>
-        <div><strong>false</strong><span>Cloudflare enabled</span></div>
-        <div><strong>true</strong><span>Funnel observed</span></div>
+        <div><strong>Disabled</strong><span>Cloudflare</span></div>
+        <div><strong>Observed</strong><span>Funnel</span></div>
         <div><strong>1</strong><span>Migrated</span></div>
         <div><strong>1</strong><span>Backup plans</span></div>
       </section>
       <section class="alert">
         <strong>P0 exposure status</strong>
-        <span>Funnel allowed in P0: false. Observed Funnel: true.</span>
+        <span>Funnel allowed in P0: no. Observed Funnel: yes.</span>
       </section>
       <section class="monitor" id="monitor-panel" hidden>
         <div class="section-head">
@@ -57,7 +57,7 @@
         <span class="pill warn"><span>privacy</span>sensitive</span>
         <span class="pill good"><span>desired</span>tailnet</span>
         <span class="pill good"><span>effective</span>local</span>
-        <span class="pill good"><span>migration</span>planned</span>
+        <span class="pill info"><span>migration</span>planned</span>
         <span class="pill warn"><span>backup</span>needs-discovery</span>
       </div>
       <dl class="facts">
@@ -98,7 +98,7 @@
         <span class="pill warn"><span>privacy</span>sensitive</span>
         <span class="pill good"><span>desired</span>tailnet</span>
         <span class="pill good"><span>effective</span>local</span>
-        <span class="pill good"><span>migration</span>planned</span>
+        <span class="pill info"><span>migration</span>planned</span>
         <span class="pill warn"><span>backup</span>needs-discovery</span>
       </div>
       <dl class="facts">
@@ -139,7 +139,7 @@
         <span class="pill warn"><span>privacy</span>restricted</span>
         <span class="pill good"><span>desired</span>tailnet</span>
         <span class="pill good"><span>effective</span>local</span>
-        <span class="pill good"><span>migration</span>planned</span>
+        <span class="pill info"><span>migration</span>planned</span>
         <span class="pill warn"><span>backup</span>needs-discovery</span>
       </div>
       <dl class="facts">
@@ -260,10 +260,10 @@
       <div class="pills">
         <span class="pill good"><span>life</span>active</span>
         <span class="pill neutral"><span>privacy</span>unclassified</span>
-        <span class="pill neutral"><span>desired</span>cloudflare-protected</span>
+        <span class="pill info"><span>desired</span>cloudflare-protected</span>
         <span class="pill good"><span>effective</span>local</span>
-        <span class="pill neutral"><span>migration</span>migrated</span>
-        <span class="pill good"><span>backup</span>planned</span>
+        <span class="pill good"><span>migration</span>migrated</span>
+        <span class="pill info"><span>backup</span>planned</span>
       </div>
       <dl class="facts">
         <div><dt>Runtime</dt><dd>docker-compose</dd></div>
@@ -280,7 +280,7 @@
         <div><dt>Last Event</dt><dd>- </dd></div>
       </dl>
       <p class="warning">Cloudflare protected access is planned only; no tunnel, DNS record, or public route is enabled.</p>
-      <div class="actions"><a class="action" href="http://127.0.0.1:18080">Local</a><a class="action" href="https://hello-nginx.oreo-cloud.invalid">Cloudflare</a></div>
+      <div class="actions"><a class="action" href="http://127.0.0.1:18080">Local</a><span class="action disabled">Cloudflare planned</span></div>
       <div class="admin-row" hidden>
         <label>Privacy <select data-action="privacy" data-workload="hello-nginx"></select></label>
         <label>Access <select data-action="access" data-workload="hello-nginx"></select></label>
