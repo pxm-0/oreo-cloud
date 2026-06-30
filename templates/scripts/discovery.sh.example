@@ -1,0 +1,65 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+OUT="${1:-/tmp/oreo-cloud-discovery.md}"
+{
+  echo "# Oreo Cloud Discovery"
+  echo
+  echo "## Host"
+  hostname || true
+  hostnamectl || true
+  date || true
+  uptime || true
+  echo
+  echo "## User"
+  whoami || true
+  id || true
+  echo
+  echo "## Network"
+  ip -brief addr || true
+  ss -tulpen || true
+  echo
+  echo "## Tailscale"
+  tailscale status || true
+  tailscale ip -4 || true
+  tailscale serve status || true
+  tailscale funnel status || true
+  echo
+  echo "## Docker"
+  docker version || true
+  docker ps --format 'table {{.Names}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}' || true
+  docker network ls || true
+  docker volume ls || true
+  docker compose ls || true
+  echo
+  echo "## Compose labels"
+  docker ps --format 'table {{.Names}}\t{{.Label "com.docker.compose.project"}}\t{{.Label "com.docker.compose.project.working_dir"}}\t{{.Label "com.docker.compose.project.config_files"}}' || true
+  echo
+  echo "## Container mounts"
+  docker inspect --format '{{.Name}} {{range .Mounts}}{{.Type}}:{{.Source}}->{{.Destination}}; {{end}}' $(docker ps -q) 2>/dev/null || true
+  echo
+  echo "## Caddy"
+  systemctl is-active caddy || true
+  systemctl status caddy --no-pager || true
+  caddy version || true
+  echo
+  echo "## Git"
+  git --version || true
+  cd /srv/oreo-cloud 2>/dev/null && git status --short || true
+  cd /srv/oreo-cloud 2>/dev/null && git remote -v || true
+  echo
+  echo "## Cloudflare"
+  cloudflared --version || true
+  systemctl is-active cloudflared || true
+  systemctl status cloudflared --no-pager || true
+  ls -la /etc/cloudflared 2>/dev/null || true
+  ls -la ~/.cloudflared 2>/dev/null || true
+  echo
+  echo "## Existing compose files"
+  find /home /srv -maxdepth 5 \( -iname 'docker-compose*.yml' -o -iname 'docker-compose*.yaml' -o -iname 'compose.yml' -o -iname 'compose.yaml' \) 2>/dev/null | sort || true
+  echo
+  echo "## Existing env files, names only"
+  find /home /srv -maxdepth 5 \( -iname '.env' -o -iname '.env.*' \) 2>/dev/null | sort || true
+} > "$OUT"
+
+echo "Wrote $OUT"

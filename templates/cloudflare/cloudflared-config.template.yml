@@ -1,0 +1,13 @@
+# Template only. Do not use directly without replacing placeholders.
+# Do not commit credentials files or tokens.
+
+tunnel: OREO_CLOUD_TUNNEL_ID
+credentials-file: /etc/cloudflared/OREO_CLOUD_TUNNEL_ID.json
+
+ingress:
+  # Generated workload routes go here.
+  # Example:
+  # - hostname: demo.example.com
+  #   service: http://127.0.0.1:8090
+
+  - service: http_status:404

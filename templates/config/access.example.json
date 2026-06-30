@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "defaultAccess": "tailnet",
+  "states": [
+    "none",
+    "local",
+    "tailnet",
+    "cloudflare-protected",
+    "cloudflare-public"
+  ],
+  "workloads": {
+    "intake-os": {
+      "desired": "tailnet",
+      "effective": "tailnet",
+      "urls": {
+        "local": "http://127.0.0.1:8080",
+        "tailnet": "http://oreochiserver:8080",
+        "cloudflare": ""
+      },
+      "lastAppliedAt": "",
+      "lastError": ""
+    },
+    "uptime-kuma": {
+      "desired": "tailnet",
+      "effective": "tailnet",
+      "urls": {
+        "local": "http://127.0.0.1:3001",
+        "tailnet": "http://oreochiserver:3001",
+        "cloudflare": ""
+      },
+      "lastAppliedAt": "",
+      "lastError": ""
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "defaultPrivacy": "unclassified",
+  "states": [
+    "unclassified",
+    "personal",
+    "internal",
+    "sensitive",
+    "restricted"
+  ],
+  "workloads": {
+    "intake-os": {
+      "privacy": "sensitive",
+      "reason": "Initial operator classification.",
+      "updatedAt": "",
+      "updatedBy": "oreo-cloud"
+    },
+    "uptime-kuma": {
+      "privacy": "restricted",
+      "reason": "Infrastructure/admin dashboard.",
+      "updatedAt": "",
+      "updatedBy": "oreo-cloud"
+    }
+  }
+}

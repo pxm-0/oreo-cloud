@@ -1,0 +1,91 @@
+{
+  "version": 1,
+  "workloads": [
+    {
+      "id": "intake-os",
+      "name": "Intake OS",
+      "description": "Application workload.",
+      "lifecycle": "active",
+      "kind": "web-app",
+      "paths": {
+        "root": "/srv/oreo-cloud/workloads/intake-os",
+        "source": "/srv/oreo-cloud/workloads/intake-os/source",
+        "manifest": "/srv/oreo-cloud/workloads/intake-os/manifest.json",
+        "legacy": "/home/oreo/intake-os"
+      },
+      "runtime": {
+        "type": "docker-compose",
+        "composePath": "/srv/oreo-cloud/workloads/intake-os/source/docker-compose.server.yml",
+        "composeProject": "intake-os",
+        "service": ""
+      },
+      "network": {
+        "localUrl": "http://127.0.0.1:8080",
+        "internalPort": 8080
+      },
+      "health": {
+        "enabled": true,
+        "url": "http://127.0.0.1:8080/health",
+        "expectedStatus": 200,
+        "timeoutSeconds": 3
+      },
+      "actions": {
+        "open": true,
+        "health": true,
+        "logs": false,
+        "restart": false,
+        "deploy": false,
+        "accessToggle": true,
+        "privacyToggle": true
+      },
+      "migration": {
+        "status": "planned",
+        "originalPath": "/home/oreo/intake-os",
+        "compatibilitySymlink": false
+      }
+    },
+    {
+      "id": "uptime-kuma",
+      "name": "Uptime Kuma",
+      "description": "Monitoring workload.",
+      "lifecycle": "active",
+      "kind": "web-app",
+      "paths": {
+        "root": "/srv/oreo-cloud/workloads/uptime-kuma",
+        "source": "",
+        "manifest": "/srv/oreo-cloud/workloads/uptime-kuma/manifest.json",
+        "legacy": ""
+      },
+      "runtime": {
+        "type": "docker",
+        "composePath": "",
+        "composeProject": "",
+        "service": ""
+      },
+      "network": {
+        "localUrl": "http://127.0.0.1:3001",
+        "internalPort": 3001
+      },
+      "health": {
+        "enabled": true,
+        "url": "http://127.0.0.1:3001",
+        "expectedStatus": 200,
+        "timeoutSeconds": 3
+      },
+      "actions": {
+        "open": true,
+        "health": true,
+        "logs": false,
+        "restart": false,
+        "deploy": false,
+        "accessToggle": true,
+        "privacyToggle": true
+      },
+      "migration": {
+        "status": "planned",
+        "originalPath": "",
+        "compatibilitySymlink": false
+      }
+    }
+  ]
+}

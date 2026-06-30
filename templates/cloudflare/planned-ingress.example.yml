@@ -1,0 +1,5 @@
+# Generated plan only.
+# No Cloudflare tunnel is enabled by this file.
+
+ingress:
+  - service: http_status:404

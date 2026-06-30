@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "dashboard": {
+    "bind": "tailscale",
+    "port": 8088,
+    "url": "http://oreochiserver:8088"
+  },
+  "api": {
+    "bind": "127.0.0.1",
+    "port": 8099,
+    "public": false
+  },
+  "workloadRoutes": {
+    "intake-os": {
+      "tailnet": {
+        "enabled": true,
+        "mode": "direct",
+        "url": "http://oreochiserver:8080"
+      },
+      "cloudflare": {
+        "enabled": false,
+        "hostname": "",
+        "mode": "disabled",
+        "requiresAuth": true
+      }
+    },
+    "uptime-kuma": {
+      "tailnet": {
+        "enabled": true,
+        "mode": "direct",
+        "url": "http://oreochiserver:3001"
+      },
+      "cloudflare": {
+        "enabled": false,
+        "hostname": "",
+        "mode": "disabled",
+        "requiresAuth": true
+      }
+    }
+  }
+}

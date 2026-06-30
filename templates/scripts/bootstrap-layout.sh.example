@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+OWNER="${OREO_CLOUD_USER:-oreo}"
+GROUP="${OREO_CLOUD_GROUP:-oreo}"
+ROOT="/srv/oreo-cloud"
+
+sudo install -d -o "$OWNER" -g "$GROUP" "$ROOT"
+sudo install -d -o "$OWNER" -g "$GROUP" "$ROOT/config/schemas"
+sudo install -d -o "$OWNER" -g "$GROUP" "$ROOT/workloads"
+sudo install -d -o "$OWNER" -g "$GROUP" "$ROOT/control-plane/dashboard/public"
+sudo install -d -o "$OWNER" -g "$GROUP" "$ROOT/control-plane/api"
+sudo install -d -o "$OWNER" -g "$GROUP" "$ROOT/control-plane/monitoring"
+sudo install -d -o "$OWNER" -g "$GROUP" "$ROOT/cloudflare"
+sudo install -d -o "$OWNER" -g "$GROUP" "$ROOT/scripts"
+sudo install -d -o "$OWNER" -g "$GROUP" "$ROOT/systemd"
+sudo install -d -o "$OWNER" -g "$GROUP" "$ROOT/runtime/metrics-history"
+sudo install -d -o "$OWNER" -g "$GROUP" "$ROOT/runtime/migration-backups"
+sudo install -d -o "$OWNER" -g "$GROUP" "$ROOT/docs"
+
+touch "$ROOT/runtime/.gitkeep" "$ROOT/runtime/metrics-history/.gitkeep" "$ROOT/runtime/migration-backups/.gitkeep"
+
+cd "$ROOT"
+git init -b main || git init
+git symbolic-ref HEAD refs/heads/main || true
+
+echo "Created $ROOT"

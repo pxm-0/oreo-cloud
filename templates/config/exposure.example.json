@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "defaultProvider": "tailscale",
+  "providers": {
+    "tailscale": {
+      "enabled": true,
+      "default": true,
+      "notes": "Primary private access path."
+    },
+    "cloudflare": {
+      "enabled": false,
+      "provisioned": true,
+      "default": false,
+      "allowQuickTunnels": false,
+      "allowNamedTunnels": false,
+      "requireAccessPolicy": true,
+      "configPath": "/srv/oreo-cloud/cloudflare/planned-ingress.yml"
+    }
+  }
+}
