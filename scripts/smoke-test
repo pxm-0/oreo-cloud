@@ -2,10 +2,12 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 import shutil
 import subprocess
+import tarfile
 import tempfile
 import time
 import urllib.error
@@ -17,7 +19,7 @@ from oreo_actions import sanitize_log_text
 
 
 MIGRATION_STATUSES = {"planned", "needs-discovery", "migrated", "blocked", "deprecated"}
-BACKUP_STATUSES = {"planned", "needs-discovery", "disabled", "blocked", "ok"}
+BACKUP_STATUSES = {"planned", "configured", "needs-discovery", "disabled", "blocked", "ok"}
 SAFE_CLOUDFLARE_PRIVACY = {"unclassified", "personal", "internal"}
 OPERATION_SCRIPTS = [
     "oreo-logs",
@@ -213,10 +215,10 @@ def check_action_api_boundaries(repo: Path, smoke: Smoke) -> None:
                 payload={"confirmation": ""},
             )
             manifest_status, manifest_payload, _ = request_json(
-                "http://127.0.0.1:18104/api/workloads/hello-nginx/backup/apply",
+                "http://127.0.0.1:18104/api/workloads/dozzle/backup/apply",
                 method="POST",
                 token=token,
-                payload={"confirmation": "hello-nginx"},
+                payload={"confirmation": "dozzle"},
             )
             smoke.check(
                 blocked_status == 403
@@ -381,6 +383,78 @@ def check_migration_and_backup(repo: Path, smoke: Smoke) -> None:
     if ok:
         smoke.pass_("migration statuses valid")
         smoke.pass_("backup plans exist for migrated workloads")
+
+
+def checksum_valid(path: Path) -> bool:
+    rows = (path / "checksums.sha256").read_text().splitlines()
+    if not rows:
+        return False
+    for row in rows:
+        digest, _, name = row.partition("  ")
+        target = path / name
+        if not target.exists() or not target.is_file():
+            return False
+        actual = hashlib.sha256(target.read_bytes()).hexdigest()
+        if actual != digest:
+            return False
+    return True
+
+
+def check_latest_backup_artifact(repo: Path, smoke: Smoke, offline: bool) -> None:
+    ok = True
+    checked = False
+    for workload_id in workload_map(repo):
+        manifest = load_manifest(repo, workload_id)
+        backup = manifest.get("backup", {}) if manifest else {}
+        operations = manifest.get("operations", {}) if manifest else {}
+        if not (backup.get("backupAllowed") or operations.get("backupAllowed")):
+            continue
+        destination = Path(str(backup.get("destination", "")))
+        if not destination.exists():
+            if offline:
+                smoke.warn(f"{workload_id} latest approved backup artifact unavailable in offline mode")
+                continue
+            smoke.fail(f"{workload_id} latest approved backup artifact exists")
+            ok = False
+            continue
+        runs = sorted(path for path in destination.iterdir() if path.is_dir())
+        if not runs:
+            if offline:
+                smoke.warn(f"{workload_id} latest approved backup artifact unavailable in offline mode")
+                continue
+            smoke.fail(f"{workload_id} latest approved backup artifact exists")
+            ok = False
+            continue
+        latest = runs[-1]
+        required = ["manifest.json", "files.tar.gz", "checksums.sha256", "restore-plan.md", "backup-summary.json"]
+        missing = [name for name in required if not (latest / name).is_file()]
+        if missing:
+            smoke.fail(f"{workload_id} latest approved backup artifact valid")
+            ok = False
+            continue
+        try:
+            json.loads((latest / "manifest.json").read_text())
+            summary = json.loads((latest / "backup-summary.json").read_text())
+            with tarfile.open(latest / "files.tar.gz", "r:gz") as archive:
+                names = archive.getnames()
+        except Exception:
+            smoke.fail(f"{workload_id} latest approved backup artifact valid")
+            ok = False
+            continue
+        if summary.get("workloadId") != workload_id or not checksum_valid(latest):
+            smoke.fail(f"{workload_id} latest approved backup artifact valid")
+            ok = False
+            continue
+        if backup.get("source") and "source/docker-compose.yml" not in names:
+            smoke.fail(f"{workload_id} latest approved backup artifact contains source")
+            ok = False
+            continue
+        checked = True
+    if ok:
+        if checked:
+            smoke.pass_("latest approved backup artifact valid")
+        elif not offline:
+            smoke.fail("latest approved backup artifact valid")
 
 
 def check_operation_permissions(repo: Path, smoke: Smoke) -> None:
@@ -577,6 +651,7 @@ def main() -> int:
     check_workload_manifests(repo, smoke)
     check_tracked_runtime_and_source(repo, smoke)
     check_migration_and_backup(repo, smoke)
+    check_latest_backup_artifact(repo, smoke, args.offline)
     check_operation_permissions(repo, smoke)
     check_operator_links(repo, smoke, args.offline)
     check_dashboard_v2(repo, smoke)
