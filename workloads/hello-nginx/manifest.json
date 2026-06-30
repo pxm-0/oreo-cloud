@@ -50,20 +50,20 @@
       "allowed": true
     },
     "backup": {
-      "allowed": false
+      "allowed": true
     },
     "logsAllowed": true,
     "restartAllowed": true,
-    "backupAllowed": false,
+    "backupAllowed": true,
     "dashboardActionsAllowed": false,
     "approvedForCloudflareProtectedDemo": true,
     "requiresConfirmation": true
   },
   "backup": {
-    "backupAllowed": false,
+    "backupAllowed": true,
     "restoreAllowed": false,
-    "status": "planned",
-    "source": false,
+    "status": "configured",
+    "source": true,
     "env": false,
     "namedVolumes": [],
     "bindMounts": [],
@@ -73,7 +73,9 @@
       "restoreCommand": ""
     },
     "destination": "/srv/oreo-cloud/runtime/backups/hello-nginx",
-    "retention": "manual",
+    "retention": {
+      "keepLast": 5
+    },
     "restoreTested": false,
     "lastBackupAt": "",
     "lastRestoreTestAt": ""
