@@ -1,6 +1,9 @@
 # Runtime files
 runtime/*
 !runtime/.gitkeep
+runtime/dashboard-state.json
+runtime/action-previews/
+runtime/cloudflare-activation/
 !runtime/metrics-history/
 runtime/metrics-history/*
 !runtime/metrics-history/.gitkeep

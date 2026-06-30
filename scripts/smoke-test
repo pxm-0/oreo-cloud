@@ -120,6 +120,23 @@ def check_dashboard(repo: Path, smoke: Smoke) -> None:
         smoke.check((repo / "control-plane" / "dashboard" / "public" / name).exists(), f"dashboard {name} generated")
 
 
+def check_dashboard_runtime_cleanliness(repo: Path, smoke: Smoke) -> None:
+    assets = [repo / "control-plane" / "dashboard" / "public" / name for name in ["index.html", "style.css", "app.js"]]
+    before = {path: path.read_bytes() for path in assets if path.exists()}
+    state_result = run([str(repo / "scripts" / "oreo-dashboard-state")], repo)
+    if state_result.returncode != 0:
+        smoke.fail("dashboard runtime state generated")
+        return
+    generator_result = run(["python3", str(repo / "control-plane" / "dashboard" / "generate_dashboard.py")], repo)
+    if generator_result.returncode != 0:
+        smoke.fail("dashboard generation clean")
+        return
+    after = {path: path.read_bytes() for path in assets if path.exists()}
+    smoke.check(before == after, "dashboard generation clean")
+    ignored = run(["git", "check-ignore", "-q", "runtime/dashboard-state.json"], repo)
+    smoke.check(ignored.returncode == 0, "runtime dashboard state ignored")
+
+
 def check_api_bind(repo: Path, smoke: Smoke, offline: bool) -> None:
     if offline:
         smoke.warn("API bind check skipped in offline mode")
@@ -331,10 +348,10 @@ def check_dashboard_v2(repo: Path, smoke: Smoke) -> None:
         smoke.fail("dashboard V2 generated")
         return
     html = html_path.read_text()
-    required = ["Access Plan", "Backups", "System", "Last Event", "Ops", "Cloudflare Plan"]
+    required = ["Access Plan", "Backups", "System", "Events", "Workloads", "Cloudflare Plan", 'id="workloads"']
     forbidden = ["control-token", "Authorization: Bearer", "PRIVATE KEY", "BEGIN ", ".env="]
-    smoke.check(all(item in html for item in required), "dashboard V2 generated")
-    smoke.check(not any(item in html for item in forbidden), "dashboard V2 contains no secret markers")
+    smoke.check(all(item in html for item in required), "dashboard static shell generated")
+    smoke.check(not any(item in html for item in forbidden), "dashboard static shell contains no secret markers")
 
 
 def check_policy_effective_access(repo: Path, smoke: Smoke) -> None:
@@ -453,6 +470,7 @@ def main() -> int:
     check_git(repo, smoke)
     check_json(repo, smoke)
     check_dashboard(repo, smoke)
+    check_dashboard_runtime_cleanliness(repo, smoke)
     check_workload_manifests(repo, smoke)
     check_tracked_runtime_and_source(repo, smoke)
     check_migration_and_backup(repo, smoke)
