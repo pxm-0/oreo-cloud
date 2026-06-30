@@ -116,6 +116,12 @@ Audit events must not contain secrets.
 
 ## Caddy Changes
 
+Generate the planned dashboard route without touching live Caddy:
+
+```bash
+oreo-caddy-dashboard-plan
+```
+
 Before editing Caddyfile:
 
 ```bash
