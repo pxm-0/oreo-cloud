@@ -84,6 +84,19 @@
         "mode": "blocked",
         "requiresAuth": true
       }
+    },
+    "hello-nginx": {
+      "tailnet": {
+        "enabled": false,
+        "mode": "local-only",
+        "url": ""
+      },
+      "cloudflare": {
+        "enabled": false,
+        "hostname": "",
+        "mode": "disabled",
+        "requiresAuth": true
+      }
     }
   }
 }

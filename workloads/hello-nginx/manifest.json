@@ -1,0 +1,63 @@
+{
+  "id": "hello-nginx",
+  "name": "Hello Nginx",
+  "description": "Low-risk demo workload migrated during P1 to prove the canonical layout.",
+  "canonicalRoot": "/srv/oreo-cloud/workloads/hello-nginx",
+  "sourcePath": "/srv/oreo-cloud/workloads/hello-nginx/source",
+  "runtime": {
+    "type": "docker-compose",
+    "composePath": "/srv/oreo-cloud/workloads/hello-nginx/source/docker-compose.yml",
+    "composeProject": "hello-nginx",
+    "service": "web",
+    "legacyComposePaths": [
+      "/srv/apps/hello-nginx/docker-compose.yml"
+    ]
+  },
+  "migration": {
+    "status": "migrated",
+    "originalPath": "/srv/apps/hello-nginx",
+    "backupPath": "/srv/oreo-cloud/runtime/migration-backups/hello-nginx.20260630-182044",
+    "compatibilitySymlink": true,
+    "migratedAt": "2026-06-30T18:20:44Z",
+    "lastHealthCheck": "2026-06-30T18:20:44Z",
+    "rollback": "Stop the migrated stack, remove /srv/apps/hello-nginx symlink, and restore backupPath to /srv/apps/hello-nginx.",
+    "notes": [
+      "Original host port 8080 conflicted with Intake OS.",
+      "Migrated Compose binds localhost-only 127.0.0.1:18080."
+    ]
+  },
+  "operations": {
+    "logsAllowed": true,
+    "restartAllowed": true,
+    "backupAllowed": false,
+    "dashboardActionsAllowed": false,
+    "approvedForCloudflareProtectedDemo": false,
+    "requiresConfirmation": true
+  },
+  "backup": {
+    "status": "planned",
+    "source": false,
+    "env": false,
+    "namedVolumes": [],
+    "bindMounts": [],
+    "database": {
+      "type": "none",
+      "dumpCommand": "",
+      "restoreCommand": ""
+    },
+    "destination": "/srv/oreo-cloud/runtime/backups/hello-nginx",
+    "retention": "manual",
+    "restoreTested": false,
+    "lastBackupAt": "",
+    "lastRestoreTestAt": ""
+  },
+  "security": {
+    "trackedByOreoCloudGit": false,
+    "classification": "unclassified",
+    "publicExposureAllowed": false,
+    "forbiddenTargets": [],
+    "notes": [
+      "No env, secret, volume, or runtime data files were discovered in the source path."
+    ]
+  }
+}

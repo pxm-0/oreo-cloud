@@ -63,6 +63,17 @@
       },
       "lastAppliedAt": "",
       "lastError": ""
+    },
+    "hello-nginx": {
+      "desired": "local",
+      "effective": "local",
+      "urls": {
+        "local": "http://127.0.0.1:18080",
+        "tailnet": "",
+        "cloudflare": ""
+      },
+      "lastAppliedAt": "2026-06-30T18:20:44Z",
+      "lastError": ""
     }
   }
 }

@@ -19,7 +19,7 @@ def load_json(name: str) -> dict[str, Any]:
 
 def write(path: Path, content: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(content)
+    path.write_text("\n".join(line.rstrip() for line in content.splitlines()) + "\n")
 
 
 def merged_state() -> dict[str, Any]:
