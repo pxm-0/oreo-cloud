@@ -104,6 +104,16 @@ def merged_workloads() -> dict[str, Any]:
     return {"workloads": merged, "routes": routes, "exposure": exposure, "events": events[-20:]}
 
 
+def dashboard_state() -> dict[str, Any]:
+    state = merged_workloads()
+    privacy = load_json("privacy.json")
+    access = load_json("access.json")
+    state["privacyStates"] = privacy["states"]
+    state["accessStates"] = access["states"]
+    state["monitoring"] = load_json("monitoring.json")
+    return state
+
+
 def regenerate_dashboard() -> None:
     import importlib.util
 
@@ -180,6 +190,8 @@ class Handler(BaseHTTPRequestHandler):
         path = urlparse(self.path).path
         if path == "/api/workloads":
             self.send_json(200, merged_workloads())
+        elif path == "/api/dashboard-state":
+            self.send_json(200, dashboard_state())
         elif path == "/api/access":
             self.send_json(200, load_json("access.json"))
         elif path == "/api/privacy":
