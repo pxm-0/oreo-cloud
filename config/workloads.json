@@ -276,6 +276,63 @@
           "docker-socket bind mount"
         ]
       }
+    },
+    {
+      "id": "hello-nginx",
+      "name": "Hello Nginx",
+      "description": "Low-risk demo workload migrated during P1 to prove the canonical layout.",
+      "lifecycle": "active",
+      "kind": "web-app",
+      "paths": {
+        "root": "/srv/oreo-cloud/workloads/hello-nginx",
+        "source": "/srv/oreo-cloud/workloads/hello-nginx/source",
+        "manifest": "/srv/oreo-cloud/workloads/hello-nginx/manifest.json",
+        "legacy": "/srv/apps/hello-nginx"
+      },
+      "runtime": {
+        "type": "docker-compose",
+        "composePath": "/srv/oreo-cloud/workloads/hello-nginx/source/docker-compose.yml",
+        "legacyComposePaths": [
+          "/srv/apps/hello-nginx/docker-compose.yml"
+        ],
+        "composeProject": "hello-nginx",
+        "service": "web"
+      },
+      "network": {
+        "localUrl": "http://127.0.0.1:18080",
+        "internalPort": 80,
+        "observedBindings": [
+          "127.0.0.1:18080->80/tcp"
+        ]
+      },
+      "health": {
+        "enabled": true,
+        "url": "http://127.0.0.1:18080",
+        "expectedStatus": 200,
+        "timeoutSeconds": 3
+      },
+      "actions": {
+        "open": true,
+        "health": true,
+        "logs": true,
+        "restart": true,
+        "deploy": false,
+        "accessToggle": true,
+        "privacyToggle": true
+      },
+      "migration": {
+        "status": "migrated",
+        "originalPath": "/srv/apps/hello-nginx",
+        "backupPath": "/srv/oreo-cloud/runtime/migration-backups/hello-nginx.20260630-182044",
+        "compatibilitySymlink": true,
+        "migratedAt": "2026-06-30T18:20:44Z",
+        "lastHealthCheck": "2026-06-30T18:20:44Z",
+        "bindMountRisks": [],
+        "namedVolumeRisks": [],
+        "notes": [
+          "Original host port 8080 conflicted with Intake OS; migrated Compose binds localhost-only 127.0.0.1:18080."
+        ]
+      }
     }
   ]
 }

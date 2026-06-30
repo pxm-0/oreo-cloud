@@ -38,6 +38,12 @@
       "reason": "Admin tool with Docker socket access.",
       "updatedAt": "2026-06-30T16:59:57Z",
       "updatedBy": "oreo-cloud-discovery"
+    },
+    "hello-nginx": {
+      "privacy": "unclassified",
+      "reason": "Low-risk demo workload with no env, secrets, volumes, or data files discovered.",
+      "updatedAt": "2026-06-30T18:20:44Z",
+      "updatedBy": "p1-migration"
     }
   }
 }
