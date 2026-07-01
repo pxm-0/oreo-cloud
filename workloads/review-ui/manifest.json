@@ -21,12 +21,12 @@
     "legacyComposePaths": []
   },
   "migration": {
-    "status": "planned",
+    "status": "skipped",
     "originalPath": "",
     "compatibilitySymlink": false,
-    "rollback": "Do not migrate until source/build provenance and bind-mounted state ownership are documented.",
+    "rollback": "No P4 migration was performed. Keep the existing container and local bind unchanged.",
     "notes": [
-      "P4 candidate only after /data/runs and /data/review_ui_jobs are classified.",
+      "P4-03 explicitly deferred migration until source/build provenance and bind-mounted state ownership are documented.",
       "Running image observed as dupe-engine-worker:v0.10.9."
     ]
   },
