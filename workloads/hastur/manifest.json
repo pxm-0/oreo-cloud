@@ -1,0 +1,109 @@
+{
+  "id": "hastur",
+  "name": "Hastur",
+  "description": "Sensitive workload with SSH, auth, and data bind mounts.",
+  "schemaVersion": 1,
+  "canonicalRoot": "/srv/oreo-cloud/workloads/hastur",
+  "sourcePath": "/srv/oreo-cloud/workloads/hastur/source",
+  "privacyCompatibility": "sensitive",
+  "accessCompatibility": "tailnet",
+  "runtime": {
+    "type": "docker-compose",
+    "compose": {
+      "path": "/srv/oreo-cloud/workloads/hastur/source/compose.yml",
+      "project": "hastur",
+      "service": "hastur",
+      "legacyPaths": [
+        "/home/oreo/hastur/compose.yml"
+      ]
+    },
+    "composePath": "/srv/oreo-cloud/workloads/hastur/source/compose.yml",
+    "composeProject": "hastur",
+    "service": "hastur",
+    "legacyComposePaths": [
+      "/home/oreo/hastur/compose.yml"
+    ]
+  },
+  "migration": {
+    "status": "planned",
+    "originalPath": "/home/oreo/hastur",
+    "compatibilitySymlink": false,
+    "rollback": "Do not migrate until SSH/auth/data handling, backup exclusions, and restore isolation are approved.",
+    "notes": [
+      "Sensitive workload with SSH and auth bind mounts.",
+      "Wildcard host bind must be remediated before access promotion."
+    ]
+  },
+  "health": {
+    "url": "http://127.0.0.1:4173",
+    "expectedStatus": 200,
+    "timeoutSeconds": 3
+  },
+  "operations": {
+    "logs": {
+      "allowed": false
+    },
+    "restart": {
+      "allowed": false
+    },
+    "backup": {
+      "allowed": false
+    },
+    "logsAllowed": false,
+    "restartAllowed": false,
+    "backupAllowed": false,
+    "dashboardActionsAllowed": false,
+    "approvedForCloudflareProtectedDemo": false,
+    "requiresConfirmation": true
+  },
+  "backup": {
+    "backupAllowed": false,
+    "restoreAllowed": false,
+    "status": "planned",
+    "source": false,
+    "env": false,
+    "namedVolumes": [],
+    "bindMounts": [
+      "/home/oreo/hastur/data"
+    ],
+    "database": {
+      "type": "none",
+      "dumpCommand": "",
+      "restoreCommand": ""
+    },
+    "destination": "/srv/oreo-cloud/runtime/backups/hastur",
+    "retention": {
+      "keepLast": 5
+    },
+    "restoreTested": false,
+    "lastBackupAt": "",
+    "lastRestoreTestAt": "",
+    "exclusions": [
+      "/home/oreo/.ssh",
+      "/home/oreo/hastur/auth",
+      "/home/oreo/hastur/.env",
+      "env values",
+      "SSH keys",
+      "auth secrets"
+    ],
+    "requirements": [
+      "Explicit operator approval required before backing up sensitive data.",
+      "SSH/auth paths must remain excluded unless separately approved.",
+      "Restore drill must use isolated paths and never overwrite live auth data."
+    ]
+  },
+  "security": {
+    "publicAllowed": false,
+    "trackedByOreoCloudGit": false,
+    "classification": "sensitive",
+    "publicExposureAllowed": false,
+    "forbiddenTargets": [
+      "/home/oreo/.ssh",
+      "/home/oreo/hastur/auth"
+    ],
+    "notes": [
+      "Sensitive workload with SSH/auth/data bind mounts.",
+      "Do not expose publicly."
+    ]
+  }
+}
